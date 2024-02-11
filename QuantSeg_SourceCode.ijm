@@ -4,7 +4,7 @@ macro "QuantSeg Menu Tool - Ce96D05D0eD0fD17D19D1cD23D2bD2dD2fD41D5aD6eD6fD73D7a
 	cmd = getArgument();
 	
 	if(cmd == "QuantSeg"){
-		//showStatus("Running macro version 1.2b");
+		//showStatus("Running macro version 1.2.2");
 		//wait(2000);
 		//showStatus("");
 		ini_path = "### PATH TO INI ###"; //<<<<<< INSERT PATH TO INI FILE THERE!
@@ -1320,7 +1320,15 @@ macro "QuantSeg Menu Tool - Ce96D05D0eD0fD17D19D1cD23D2bD2dD2fD41D5aD6eD6fD73D7a
 			while(!ventricles_found){
 				showStatus("!Segmentation in progress...");
 				if(draw_walls){
-					setForegroundColor(0,0,255);
+					if(thresholdArray.length == 3){
+						//print("R: "+thresholdArray[0]+"\nG: "+thresholdArray[1]+"\nB: "+thresholdArray[2]);
+						setForegroundColor(thresholdArray[0], thresholdArray[1], thresholdArray[2]);
+					}
+					else if(thresholdArray.length == 5){
+						//print("R: "+thresholdArray[2]+"\nG: "+thresholdArray[3]+"\nB: "+thresholdArray[4]);
+						setForegroundColor(thresholdArray[2], thresholdArray[3], thresholdArray[4]);
+					}
+						
 					setTool("Pencil Tool");
 					waitForUser("Please adjust pencil width if needed and\ncomplete ventricle walls.");
 				}
@@ -1329,15 +1337,16 @@ macro "QuantSeg Menu Tool - Ce96D05D0eD0fD17D19D1cD23D2bD2dD2fD41D5aD6eD6fD73D7a
 					setTool("Pencil Tool");
 					waitForUser("Please adjust pencil width if needed and\ncomplete ventricle lumen.");
 				}
-				
-				draw_walls = false;
-				draw_ventricle = false;
-				
+						
 				if(!ventricles_found){
 					if(!draw_ventricle && !draw_walls){
 						thresholdArray = correctPSRBackground();
+						//Array.show("thresholdArray:\n", thresholdArray);
 						correctCounter++;
 					}
+					
+					draw_walls = false;
+					draw_ventricle = false;
 					showStatus("!Segmentation in progress...");
 
 					/*Recognize silhouette of whole section*/
@@ -4646,8 +4655,31 @@ function correctPSRBackground(){
 	wait(2000);
 	rename(title);
 	
+	run("Restore Selection");
+	run("Make Inverse");
+	
+	/*Measuring mean color*/
+	showStatus("Measuring mean color...");
+	run("RGB Stack");
+	title = getTitle();
+	run("Set Measurements...", "mean redirect=None decimal=3");
+	
+	for(rgb = 0; rgb<3; rgb++){
+		run("Measure");
+		run("Next Slice [>]");
+	}
+	
+	R = getResult("Mean", 3);
+	G = getResult("Mean", 4);
+	B = getResult("Mean", 5);
+	
+	run("RGB Color");
+	wait(2000);
+	rename(title);
+	
 	/*Whitening background*/
 	run("Restore Selection");
+	run("Make Inverse");
 	setColor(255,255,255);
 	run("Fill", "slice");
 	run("Select None");
@@ -4655,13 +4687,13 @@ function correctPSRBackground(){
 	close();
 	
 	if(CHOOSE_THRESHOLDS_MANUALLY && correctCounter == 0){
-		return newArray(lower, upper);
+		return newArray(lower, upper, R, G, B);
 	}
 	else if(CHOOSE_THRESHOLDS_MANUALLY && correctCounter > 0){
-		return newArray(backLines[0], backLines[1]);
+		return newArray(backLines[0], backLines[1], R, G, B);
 	}
 	else{
-		return newArray(0);
+		return newArray(R, G, B);
 	}
 }
 
@@ -5283,6 +5315,13 @@ function PSRAnalysisCore(mode, thresholdArray){
 	}
 
 	return returnArray;
+}
+
+function printArray(arr){
+	print(
+	for(i=0; i<arr.length; i++){
+		print(i+": "+arr[i]);
+	}
 }
 
 function isPointWithinImageBoundaries(x, y){ //WARNING! Will delete selection, if present

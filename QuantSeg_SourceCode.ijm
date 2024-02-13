@@ -1298,6 +1298,13 @@ macro "QuantSeg Menu Tool - Ce96D05D0eD0fD17D19D1cD23D2bD2dD2fD41D5aD6eD6fD73D7a
 		folder_title = dir_array[dir_array.length-1];
 		title = getTitle();
 		path = dir+title;
+
+		//Checks whether the compressed image is named correctly.
+		if(ANALYZE_HIGH_RESOLUTION_IMAGE_AFTER_SEGMENTATION){
+			if(lengthOf(title) == lengthOf(replace(title, "_Scale.jpg", ".tif"))){
+				exit("Please note that the low-resolution image's title must end in _Scale.jpg.");
+			}
+		}
 		
 		whitened_saved = false;
 		warnOverlap = false;

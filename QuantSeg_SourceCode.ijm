@@ -3813,13 +3813,13 @@ macro "QuantSeg Menu Tool - Ce96D05D0eD0fD17D19D1cD23D2bD2dD2fD41D5aD6eD6fD73D7a
 							//Mostly horizontal
 							if((bisector_angle <= 45 && bisector_angle >= -45) || bisector_angle >= 135 || (bisector_angle >= -180 && bisector_angle <= -135)){
 								rv_centerpoint = getPointOnLineFromX1(rv_testpoint1[0], rv_testpoint1[1], bisector_angle, getStringWidth(rv_string)/2, 1, false);
-								drawString("RV", rv_centerpoint1[0], rv_centerpoint1[1]);
+								drawString("RV", rv_centerpoint[0], rv_centerpoint[1]);
 								break;
 							}
 							//Mostly vertical
 							else if((bisector_angle > 45 && bisector_angle < 135) || (bisector_angle < -45 && bisector_angle > -135)){
 								rv_centerpoint = getPointOnLineFromX1(rv_testpoint1[0], rv_testpoint1[1], bisector_angle, getValue("font.height")/2, 1, false);
-								drawString("RV", rv_centerpoint1[0], rv_centerpoint1[1]);
+								drawString("RV", rv_centerpoint[0], rv_centerpoint[1]);
 								break;
 							}
 							
@@ -4048,13 +4048,13 @@ macro "QuantSeg Menu Tool - Ce96D05D0eD0fD17D19D1cD23D2bD2dD2fD41D5aD6eD6fD73D7a
 							//Mostly horizontal
 							if((bisector_angle <= 45 && bisector_angle >= -45) || bisector_angle >= 135 || (bisector_angle >= -180 && bisector_angle <= -135)){
 								rv_centerpoint = getPointOnLineFromX1(rv_testpoint1[0], rv_testpoint1[1], bisector_angle, getStringWidth(rv_string)/2, 1, false);
-								drawString("RV", rv_centerpoint1[0], rv_centerpoint1[1]);
+								drawString("RV", rv_centerpoint[0], rv_centerpoint[1]);
 								break;
 							}
 							//Mostly vertical
 							else if((bisector_angle > 45 && bisector_angle < 135) || (bisector_angle < -45 && bisector_angle > -135)){
 								rv_centerpoint = getPointOnLineFromX1(rv_testpoint1[0], rv_testpoint1[1], bisector_angle, getValue("font.height")/2, 1, false);
-								drawString("RV", rv_centerpoint1[0], rv_centerpoint1[1]);
+								drawString("RV", rv_centerpoint[0], rv_centerpoint[1]);
 								break;
 							}
 							
